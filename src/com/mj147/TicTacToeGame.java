@@ -2,16 +2,11 @@ package com.mj147;
 
 import java.util.Scanner;
 
-public class OX {
+public class TicTacToeGame {
 
     private int[][] table;
     private int gameMode;
     private int whoStart;
-
-    public static void main(String[] args) {
-        OX ox = new OX();
-        ox.fillTable();
-    }
 
     public void fillTable() {
         table = new int[3][3];
