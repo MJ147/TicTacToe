@@ -1,18 +1,26 @@
 package com.mj147;
 
+import com.mj147.computer.ComputerEasy;
+import com.mj147.computer.ComputerHard;
+import com.mj147.computer.ComputerMedium;
+import com.mj147.computer.ComputerOpponent;
+
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.SortedMap;
 
 public class TicTacToeGame {
 
     private int[][] table;
     private int gameMode;
     private int whoStart;
+    String abc = "abc";
 
     public void fillTable() {
         table = new int[3][3];
         gameMode = 3;
 //               = 0 (Player vs. Player)
-//               = 1 (Player vs. Computer level easy)
+//               = 1 (Player vs. Computer level randomMove)
 //               = 2 (Player vs. Computer level medium)
 //               = 3 (Player vs. Computer level hard)
         whoStart = 2;
@@ -21,26 +29,34 @@ public class TicTacToeGame {
         int x = 0;
         int y = 0;
         int k = 0;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                table[i][j] = 0;
-                System.out.print(table[j][i] + "  ");
-            }
-            System.out.println("");
-        }
+
+        System.out.println("--- Tic Tac Toe ---");
+        System.out.println("Choose fields from a0 to c2. Arrange three symbols in line to win.");
+        System.out.println();
+
 
         while ( k < table.length*table[1].length ){
             k = whichTurn();
             int XorO = (k + 2 - whoStart)% 2 + 1;
             String xy;
-            System.out.println("Player " + XorO + " turn:");
+
+                System.out.print("Player " + XorO + " turn: ");
+
             if (XorO == 2) {
-                AI ai = new AI(table, x, y, k);
+                ComputerOpponent computerOpponent;
                 switch (gameMode) {
-                    case 1: xy = ai.easy(); break;
-                    case 2: xy = ai.medium(); break;
-                    case 3: xy = ai.hard(); break;
-                    default: xy = ai.easy();
+                    case 2:
+                        computerOpponent = new ComputerMedium(table, x, y, k);
+                        xy = computerOpponent.play();
+                        break;
+                    case 3:
+                        computerOpponent = new ComputerHard(table, x, y, k);
+                        xy = computerOpponent.play();
+                        break;
+                    default:
+                        computerOpponent = new ComputerEasy(table, x, y);
+                        xy = computerOpponent.play();
+                        break;
                 }
             } else {
                 xy = input(XorO);
@@ -51,18 +67,21 @@ public class TicTacToeGame {
                 if (table[x][y] == 0) {
                     table[x][y] = XorO ;
                 } else {
-                    printTable();
                     System.out.println("Wprowadź poprawną wartość");
                     k--;
                     continue;
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
-                printTable();
                 System.out.println("Wprowadź poprawną wartość");
                 k--;
                 continue;
             }
-            printTable();
+
+            if (XorO == 2) {
+                System.out.println(String.valueOf(abc.charAt(y)) + x);
+            }
+            System.out.println(printTable(table));
+
             WinCheck wc = new WinCheck(x, y, table);
             if (wc.winCheck()) {
                 break;
@@ -82,31 +101,48 @@ public class TicTacToeGame {
                 }
             }
         }
-        System.out.println(whichTurn);
+//        System.out.println(whichTurn); //  info for developer
         return whichTurn;
     }
 
-    public void printTable() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(table[j][i] + "  ");
-            }
-            System.out.println("");
-        }
-    }
-
     public String input(int XorO) {
+
         String input;
         Scanner scanner = new Scanner(System.in);
+        String charToNumber;
+        char x,y;
+
         do {
             input = scanner.nextLine();
+
             if (input.length() != 2) {
-                printTable();
+                System.out.println(printTable(table));
                 System.out.println("Wprowadź poprawną wartość");
                 System.out.println("Player " + XorO + " turn:");
             }
+
         } while (input.length() != 2);
-        return input;
+
+        x = input.charAt(0);
+        y = input.charAt(1);
+        charToNumber = String.valueOf(abc.indexOf(x));
+        return y + charToNumber;
+    }
+
+    public String printTable(int[][] tableToConvert) {
+
+        String convertedTable = Arrays.deepToString(tableToConvert).replace("], ", "\n")
+                                                                   .replace(",", " ")
+                                                                   .replace("[", "")
+                                                                   .replace("]", "")
+                                                                   .replace("0", "-")
+                                                                   .replace("1", "O")
+                                                                   .replace("2", "X")
+                                                                    + "\n";
+
+
+
+        return convertedTable;
     }
 
 }
