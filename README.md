@@ -10,7 +10,7 @@ It is one of my first application. I wanted to make complete game which be suppo
 virtual opponent, who can do perfect move in game in any situatuion. 
 
 ## Inspiration
-The game based on classic tic-tac-toe game. Created entirely by me.
+The game based on classic a tic-tac-toe game. Created entirely by me using Stack Overflow and the Documentation.
 
 ## Technologies
 * Java 8
